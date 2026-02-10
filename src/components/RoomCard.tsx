@@ -1,6 +1,8 @@
 import React from 'react';
 import { Users, Bed, Star, ArrowRight, Plus, Check, Heart } from 'lucide-react';
 import { Room } from '../types';
+import { getImageUrl } from '../utils/image';
+
 interface RoomCardProps {
   room: Room;
   onViewDetails: (roomId: string) => void;
@@ -9,6 +11,7 @@ interface RoomCardProps {
   isFavourite?: boolean;
   onToggleFavourite?: (roomId: string, e: React.MouseEvent) => void;
 }
+
 export function RoomCard({
   room,
   onViewDetails,
@@ -25,7 +28,7 @@ export function RoomCard({
       {/* Image Container */}
       <div className="relative h-48 overflow-hidden">
         <img
-          src={room.image}
+          src={getImageUrl(room.image)}
           alt={room.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
 
