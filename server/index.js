@@ -27,14 +27,28 @@ const app = express();
 connectDB();
 
 // Middleware
+// CORS configuration
+const allowedOrigins = [
+    'https://find-it-mate.vercel.app',
+    'https://find-it-mate-git-main-jineth-js-projects.vercel.app', // Vercel preview URLs usually look like this too
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CLIENT_URL
+].filter(Boolean);
+
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production'
-        ? [process.env.CLIENT_URL, 'https://finditmate.vercel.app'] // Add your Vercel URL here after deployment if known, or use a specific env var
-        : ['http://localhost:5173', 'http://localhost:3000'],
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+            callback(null, true);
+        } else {
+            console.log('Blocked by CORS:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
-// Allow all for now to ensure it works, user can tighten it later
-app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
