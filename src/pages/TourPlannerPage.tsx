@@ -1,70 +1,14 @@
-import { useEffect, useState } from 'react';
-import {
-  MapPin,
-  Star,
-  ArrowRight,
-  Route,
-  RotateCcw,
-  Clock,
-  Navigation,
-  Save,
-  Check,
-  Loader2
-} from
-  'lucide-react';
-import { Room, User } from '../types';
-import { CalendarPopover } from '../components/CalendarPopover';
-import { toursAPI, getAuthToken } from '../services/api';
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Polyline,
-  useMap
-} from
-  'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { motion, AnimatePresence } from 'framer-motion';
-// Fix for default Leaflet marker icons
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png'
-});
-interface TourPlannerPageProps {
-  rooms: Room[];
-  onViewRoom: (roomId: string) => void;
-  user?: User | null;
-}
-interface TourProperty {
-  id: string;
-  name: string;
-  location: string;
-  price: number;
-  rating: number;
-  reviews: number;
-  type: string;
-  image: string;
-  amenities: string[];
-  badge: string;
-  badgeColor: string;
-  tag?: string;
-  estimatedBudget?: number;
-  lat: number;
-  lng: number;
-  step?: number;
-}
+import { getImageUrl } from '../utils/image';
+// ... imports
+
+// ...
+
 // Helper to convert Room to TourProperty
 const mapRoomToProperty = (room: Room): TourProperty => {
   // Use real coordinates from database, fallback to deterministic mock based on ID
   const lat = room.location?.lat || (6.9271 + (parseInt(room.id.slice(-4), 16) % 100) * 0.001);
   const lng = room.location?.lng || (79.8612 + (parseInt(room.id.slice(-4), 16) % 100) * 0.001);
+
   return {
     id: room.id,
     name: room.name,
@@ -73,7 +17,7 @@ const mapRoomToProperty = (room: Room): TourProperty => {
     rating: room.rating,
     reviews: Math.floor(Math.random() * 50) + 10,
     type: room.type,
-    image: room.image,
+    image: getImageUrl(room.image),
     amenities: room.amenities.slice(0, 3),
     badge: room.rating > 4.7 ? 'Excellent' : 'Good',
     badgeColor: room.rating > 4.7 ? 'bg-green-500' : 'bg-yellow-500',
