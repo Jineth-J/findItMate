@@ -6,7 +6,7 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "https://finditmate-server.onrender.com/api/$1"
+            "destination": "https://finditmate.onrender.com/api/$1"
         }
     ]
 }

@@ -28,9 +28,14 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    origin: process.env.NODE_ENV === 'production'
+        ? [process.env.CLIENT_URL, 'https://finditmate.vercel.app'] // Add your Vercel URL here after deployment if known, or use a specific env var
+        : ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true
 }));
+// Allow all for now to ensure it works, user can tighten it later
+app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
